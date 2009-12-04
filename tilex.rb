@@ -58,6 +58,16 @@ Dir['./data/*.sty'].each do |filename|
         sprb[:user] = sprb_arr[4]
         sprb[:font] = sprb_arr[5]
         processed[:sprb] = sprb
+      when "FONB"
+        font_count = data[0,2].unpack("S")[0]
+        index = 2
+        bases = [0]
+        (font_count-1).times do
+          num_char = data[index,2].unpack("S")[0]
+          bases << bases[bases.length-1] + num_char
+          index += 2
+        end
+        processed[:fonb] = bases
       else
         puts "ERROR: Unknown Chunk Type: #{type}"
         exit
