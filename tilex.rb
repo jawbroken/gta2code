@@ -69,15 +69,23 @@ Dir['./data/*.sty'].each do |filename|
         end
         processed[:fonb] = bases
       when "DELX"
-        delx_arr = data[0,4].unpack("SCC")
-        which_sprite = delx_arr[0]
-        delta_count = delx_arr[1]
-        delta_size = data[4,2*delta_count].unpack("S"*delta_count)
-        delx = {}
-        delx[:which_sprite] = which_sprite
-        delx[:delta_count] = delta_count
-        delx[:delta_size] = delta_size
-        processed[:delx] = delx
+        index = 0
+        delxs = []
+        while index < size
+          delx_arr = data[index,4].unpack("SCC")
+          which_sprite = delx_arr[0]
+          delta_count = delx_arr[1]
+          delta_size = data[index+4,2*delta_count].unpack("S"*delta_count)
+          delx = {}
+          delx[:which_sprite] = which_sprite
+          delx[:delta_count] = delta_count
+          delx[:delta_size] = delta_size
+          delxs << delx
+          index += 4+2*delta_count
+        end
+        processed[:delx] = delxs
+      when "DELS"
+        
       else
         puts "ERROR: Unknown Chunk Type: #{type}"
         exit
