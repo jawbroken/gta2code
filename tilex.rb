@@ -48,6 +48,16 @@ Dir['./data/*.sty'].each do |filename|
           index += 1024
           ppal_num += 1
         end
+      when "SPRB"
+        sprb_arr = data.unpack("SSSSSS")
+        sprb = {}
+        sprb[:car] = sprb_arr[0]
+        sprb[:ped] = sprb_arr[1]
+        sprb[:code_obj] = sprb_arr[2]
+        sprb[:map_obj] = sprb_arr[3]
+        sprb[:user] = sprb_arr[4]
+        sprb[:font] = sprb_arr[5]
+        processed[:sprb] = sprb
       else
         puts "ERROR: Unknown Chunk Type: #{type}"
         exit
