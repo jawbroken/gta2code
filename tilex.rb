@@ -94,11 +94,11 @@ Dir['./data/*.sty'].each do |filename|
           index += 4+2*delta_count
         end
         processed[:delx] = delxs
-      when "DELS"
-        
+      when "PALX"
+        processed[:palx] = data.unpack("S"*16384)
       else
         puts "ERROR: Unknown Chunk Type: #{type}"
-        exit
+        #exit
       end
       
     end
