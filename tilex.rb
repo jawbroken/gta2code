@@ -3,8 +3,6 @@ require 'gd2'
 
 Dir['./data/*.sty'].each do |filename|
   File.open(filename, 'rb') do |f|
-    
-    
     file_type = f.read(4)
     next if file_type != "GBST"
     
@@ -151,13 +149,15 @@ Dir['./data/*.sty'].each do |filename|
       tile.each do |tile_num, tile_raw|
         tile_pal_ind = palx[tile_base+tile_num]
         tile_pal = ppal[tile_pal_ind]
-        tile_img = GD2::Image.import('./blank_tile.png') # workaround for GD2 alpha
+        # workaround for GD2 alpha
+        tile_img = GD2::Image.import('./blank_tile.png')
         tile_img.save_alpha = 1
         64.times do |x|
           64.times do |y|
             pix_raw = tile_raw[x+64*y]
             color = tile_pal[pix_raw]
-            tile_img.set_pixel(x,y,GD2::Color.new(color[2],color[1],color[0], pix_raw == 0 ? GD2::ALPHA_TRANSPARENT : GD2::ALPHA_OPAQUE).to_i)
+            tile_img.set_pixel(x,y,GD2::Color.new(color[2],color[1],color[0], 
+              pix_raw == 0 ? GD2::ALPHA_TRANSPARENT : GD2::ALPHA_OPAQUE).to_i)
           end
         end
         tile_img.export("#{output_dir}/#{tile_num}.png")
