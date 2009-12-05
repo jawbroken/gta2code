@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'gd2'
+
 Dir['./data/*.sty'].each do |filename|
   File.open(filename, 'rb') do |f|
     file_type = f.read(4)
@@ -112,7 +115,29 @@ Dir['./data/*.sty'].each do |filename|
         puts "ERROR: Unknown Chunk Type: #{type}"
         #exit
       end
+    end
+    
+    if(!processed[:tile].nil? and !processed[:ppal].nil? and
+      !processed[:palx].nil? and !processed[:palb].nil?)
+      tile = processed[:tile]
+      ppal = processed[:ppal]
+      palx = processed[:palx]
+      palb = processed[:palb]
+      tile_base = palb[:tile]
       
+      tile.each do |tile_num, tile_raw|
+        tile_pal_ind = palx[tile_base+tile_num]
+        tile_pal = ppal[tile_pal_ind]
+        tile_img = GD2::Image.new(64,64)
+        64.times do |x|
+          64.times do |y|
+            pix_raw = tile_raw[x+64*y]
+            color = tile_pal[pix_raw*4,4]
+            tile_img.set_pixel(x,y,GD2::Color.new(color[2],color[1],color[0]).to_i)
+          end
+        end
+        tile_img.export("./tiles/#{tile_num}.png")
+      end
     end
     
     exit
