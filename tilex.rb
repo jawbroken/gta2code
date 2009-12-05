@@ -31,11 +31,21 @@ Dir['./data/*.sty'].each do |filename|
         index = 0
         tile_num = 0
         
+        # tiles are stored in 4x4 blocks in 64K pages
         while index < size
-          tile_dat = data[index,64**2]
-          processed[:tile][tile_num] = tile_dat
-          index += 64**2
-          tile_num += 1
+          page = data[index, 64*1024]
+          4.times do |y|
+            4.times do |x|
+              tile_dat = ""
+              64.times do |l|
+                tile_dat += page[x*64+(y*64+l)*256, 64]
+              end
+              processed[:tile][tile_num] = tile_dat
+              tile_num += 1
+            end
+          end
+          
+          index += 64*1024
         end
       when "PPAL"
         # note: palette in BGRA order
