@@ -96,6 +96,18 @@ Dir['./data/*.sty'].each do |filename|
         processed[:delx] = delxs
       when "PALX"
         processed[:palx] = data.unpack("S"*16384)
+      when "PALB"
+        palb_arr = data.unpack("S"*8)
+        palb = {}
+        palb[:tile] = 0
+        palb[:sprite] = palb_arr[0]
+        palb[:car_remap] = palb[:sprite] + palb_arr[1]
+        palb[:ped_remap] = palb[:car_remap] + palb_arr[2]
+        palb[:code_obj_remap] = palb[:ped_remap] + palb_arr[3]
+        palb[:map_obj_remap] = palb[:code_obj_remap] + palb_arr[4]
+        palb[:user_remap] = palb[:map_obj_remap] + palb_arr[5]
+        palb[:font_remap] = palb[:user_remap] + palb_arr[6]
+        processed[:palb] = palb
       else
         puts "ERROR: Unknown Chunk Type: #{type}"
         #exit
