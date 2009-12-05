@@ -3,6 +3,8 @@ require 'gd2'
 
 Dir['./data/*.sty'].each do |filename|
   File.open(filename, 'rb') do |f|
+    
+    
     file_type = f.read(4)
     next if file_type != "GBST"
     
@@ -137,6 +139,9 @@ Dir['./data/*.sty'].each do |filename|
     
     if(!processed[:tile].nil? and !processed[:ppal].nil? and
       !processed[:palx].nil? and !processed[:palb].nil?)
+      output_dir = "./tiles/#{File::basename(filename).split(".")[0]}"
+      FileUtils.mkdir_p output_dir
+      
       tile = processed[:tile]
       ppal = processed[:ppal]
       palx = processed[:palx]
@@ -155,10 +160,8 @@ Dir['./data/*.sty'].each do |filename|
             tile_img.set_pixel(x,y,GD2::Color.new(color[2],color[1],color[0], pix_raw == 0 ? GD2::ALPHA_TRANSPARENT : GD2::ALPHA_OPAQUE).to_i)
           end
         end
-        tile_img.export("./tiles/#{tile_num}.png")
+        tile_img.export("#{output_dir}/#{tile_num}.png")
       end
     end
-    
-    exit
   end
 end
