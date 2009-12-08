@@ -52,15 +52,6 @@ Dir['./data/*.sty'].each do |filename|
         end
       when "PPAL"
         # note: palette in BGRA order
-        # processed[:ppal] = {}
-        # index = 0
-        # ppal_num = 0
-        # while index < size
-        #   ppal_dat = data[index, 1024]
-        #   processed[:ppal][ppal_num] = ppal_dat
-        #   index += 1024
-        #   ppal_num += 1
-        # end
         processed[:ppal] = {}
         index = 0
         ppal_num = 0
